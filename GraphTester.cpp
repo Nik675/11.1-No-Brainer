@@ -82,4 +82,5 @@ bool checkCase(string name, bool condition) {
 	else {
 		cout << "Passed: " << name << endl;
 	}return condition;
+	
 }

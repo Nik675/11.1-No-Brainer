@@ -1,119 +1,108 @@
 #pragma once
 
 #include <iostream>
-#include <memory>
 #include <vector>
-#include <stack>
+#include <unordered_map>
+#include <list>
+#include <algorithm>
 using namespace std;
 
-
-template <typename Type>
+template < typename Type >
 class Graph;
 
-template <typename Type>
-ostream& operator << (ostream & out, const Graph<Type> &g);
+template < typename Type >
+ostream& operator<<( ostream& out , const Graph< Type >& g );
 
 template <typename Type>
+
 class Graph {
+
 private:
-	//TODO Add private variables here
+
+    vector< Type > vertices; 
+    unordered_map<Type, list< Type > > adjList; 
+
 
 public:
-	Graph();
-	void addVertex(Type vertex);
-	void addEdge(Type, Type);
-	int getVertexPos(Type item);
-	int getNumVertices()const;
-	bool isEdge(Type, Type);
-	friend ostream& operator << <>(ostream & out, const Graph<Type> &g);
-	vector<Type>getPath(Type, Type);
+    Graph( );
+
+    void addVertex( Type vertex ) ;
+
+    void addEdge( Type source, Type target );
+
+    int getVertexPos( Type item );
+
+    int getNumVertices( ) const;
+
+    bool isEdge( Type source, Type target);
+	
+    friend ostream& operator<< <>(ostream& out, const Graph<Type>& g);
 };
 
+template < typename Type >
+Graph< Type >::Graph( ) {}
 
-
-/*********************************************
-* Constructs an empty graph
-*
-*********************************************/
-template<typename Type>
-Graph<Type>::Graph() {
-
-}
-
-
-
-
-/*********************************************
-* Adds a Vertex to the Graphs. Note that the vertex may not be an int value
-*********************************************/
 template <typename Type>
 void Graph<Type>::addVertex(Type vertex) {
 
+    if ( find(vertices.begin(), vertices.end(), vertex) == vertices.end() ) {
+		
+        vertices.push_back( vertex );
+        adjList[vertex] = list<Type>();
+
+    }
 }
 
-/*********************************************
-* Returns the current number of vertices
-*
-*********************************************/
-template<typename Type>
-int Graph<Type>::getNumVertices()const {
-	return 0;
+template < typename Type > 
+void Graph< Type >::addEdge(Type source, Type target) {
+
+    if (adjList.find(source) != adjList.end() && adjList.find(target) != adjList.end()) {
+        adjList[source].push_back(target);
+    }
 }
 
+template < typename Type >
 
+int Graph< Type >::getVertexPos(Type item) {
+    auto it = find(vertices.begin( ), vertices.end(), item);
 
-/*********************************************
-* Returns the position in the verticies list where the given vertex is located, -1 if not found.
-*
-*********************************************/
-template <typename Type>
-int Graph<Type>::getVertexPos(Type item) {
-	
-	return -1; //return negative one
-}//End findVertexPos
+    if ( it != vertices.end( ) ) {
+        return distance(vertices.begin(), it);
 
-/*********************************************
-* Adds an edge going in the direction of source going to target
-*
-*********************************************/
-template <typename Type>
-void Graph<Type>::addEdge(Type source, Type target) {
-	
+    }
+    return -1;
 }
 
 template <typename Type>
-bool Graph<Type>::isEdge(Type source, Type dest) {
-	
-	return false;
+int Graph<Type>::getNumVertices() const {
+    return vertices.size( );
 }
 
+template < typename Type >
+bool Graph<Type>::isEdge( Type source, Type target )  {
+    if ( adjList.find(source) != adjList.end( ) ) {
 
+        auto& edges = adjList[source];
+        return find( edges.begin( ), edges.end( ), target) != edges.end();
 
-/*********************************************
-* Returns a display of the graph in the format
-* vertex: edge edge
-* Note: This is not a traversal, just output
-*********************************************/
+    }
+    return false;
+}
+
 template <typename Type>
-ostream& operator << (ostream & out, const Graph<Type> &g) {
+ostream& operator<<(ostream& out, const Graph<Type>& g) {
 
-	return out;
+    for (const auto& vertex : g.vertices) {
+        out << vertex << ": ";
+		
+        for (const auto& edge : g.adjList.at(vertex)) {
+
+            out << edge << " ";
+
+        }
+        out << endl;
+    }
+
+    return out;
+
 }
-
-/*
-  getPath will return the shortest path from source to dest.
-  You are welcome to use any solution not limited to the following, depth first search to traverse
-  graph to find the solution, breadth first, shortest path first, or any
-  other graph algorithm.
-
-  You will return a vector with the solution from the source to the destination.
-  IE: The source will be in position 1 the destination is in the last position of the solution, and each node in between
-  are the verticies it will travel to get to the destination.  There will not be any
-  other verticies in the list.
-*/
-template <typename Type>
-vector<Type> Graph<Type>::getPath(Type source, Type dest) {
-	vector<Type> solution
-	return solution;
-}
-
